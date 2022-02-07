@@ -77,12 +77,6 @@ kubectl get pods -n kubeflow
 
 ![session-manager-eks-kubeflow-pods](/images/session-manager-eks-kubeflow-pods.png)
 
-Accessing the Kubeflow dashboard.
-
-![kubeflow-screenshot-1](/images/kubeflow-screenshot-1.png)
-
-![kubeflow-screenshot-2](/images/kubeflow-screenshot-2.png)
-
 
 ## (Optional) Using Cloud9 for accessing EKS, SageMaker Operators and Kubeflow.
 
