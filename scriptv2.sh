@@ -15,9 +15,11 @@ echo "export ROLE_NAME=${ROLE_NAME}" | tee -a ~/.bash_profile
 export NODEGROUP_NAME=$(eksctl get nodegroups --cluster ${AWS_CLUSTER_NAME} -o json | jq -r '.[0].Name')
 eksctl scale nodegroup --cluster ${AWS_CLUSTER_NAME} --name $NODEGROUP_NAME --nodes 6 --nodes-max 10
 
-curl --silent --location "https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz" | tar xz -C /tmp
+#curl --silent --location "https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz" | tar xz -C /tmp
 
-sudo cp -v /tmp/kfctl /usr/local/bin
+sudo cp -v kfext/kfctl /usr/local/bin
+
+#sudo cp -v /tmp/kfctl /usr/local/bin
 
 cat << EoF > kf-install.sh
 export AWS_CLUSTER_NAME=\${AWS_CLUSTER_NAME}
@@ -26,8 +28,7 @@ export KF_NAME=\${AWS_CLUSTER_NAME}
 export BASE_DIR=/home/ec2-user/environment
 export KF_DIR=\${BASE_DIR}/\${KF_NAME}
 
-# export CONFIG_URI="https://raw.githubusercontent.com/kubeflow/manifests/v1.2-branch/kfdef/kfctl_aws_cognito.v1.2.0.yaml"
-export CONFIG_URI="https://raw.githubusercontent.com/kubeflow/manifests/v1.2-branch/kfdef/kfctl_aws.v1.2.0.yaml"
+export CONFIG_URI="https://raw.githubusercontent.com/kalawat1985/eks-kubeflow-cloudformation-quick-start/kubeflow102/kfext/kfctl_aws.v1.0.2.yaml"
 
 export CONFIG_FILE=\${KF_DIR}/kfctl_aws.yaml
 EoF
@@ -57,11 +58,5 @@ aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aw
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
 
-sleep 600
-
-export ISTIO_URL=$(kubectl get ingress -n istio-system | awk  '{print $4}' | grep -i istio)
-aws ssm put-parameter --name "ISTIO_URL" --value "${ISTIO_URL}" --type String
-aws ssm put-parameter --name "ISTIO_USER" --value "admin@kubeflow.org" --type String
-aws ssm put-parameter --name "ISTIO_PASS" --value "12341234" --type String
 
 
