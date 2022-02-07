@@ -15,7 +15,7 @@ echo "export ROLE_NAME=${ROLE_NAME}" | tee -a ~/.bash_profile
 export NODEGROUP_NAME=$(eksctl get nodegroups --cluster ${AWS_CLUSTER_NAME} -o json | jq -r '.[0].Name')
 eksctl scale nodegroup --cluster ${AWS_CLUSTER_NAME} --name $NODEGROUP_NAME --nodes 6 --nodes-max 10
 
-sudo cp -v /home/ec2-user/eks-kubeflow-cloudformation-quick-start/kfext/kfctl /usr/local/bin
+sudo cp -v kfext/kfctl /usr/local/bin
 
 cat << EoF > kf-install.sh
 export AWS_CLUSTER_NAME=\${AWS_CLUSTER_NAME}
