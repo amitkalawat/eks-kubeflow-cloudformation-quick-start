@@ -77,18 +77,6 @@ kubectl get pods -n kubeflow
 
 ![session-manager-eks-kubeflow-pods](/images/session-manager-eks-kubeflow-pods.png)
 
-```
-kubectl get ingress -n istio-system
-```
-
-![session-manager-eks-ingress-kubeflow](/images/session-manager-eks-ingress-kubeflow.png)
-
-Copy the URL under address open it on browser on your workstation.
-
-#### For the purposes of this demo, our installation uses default passwords as mentioned at https://v1-4-branch.kubeflow.org/docs/distributions/aws/deploy/install-kubeflow/#understanding-the-deployment-process. Please make sure you are changing the password for admin or create a new user.
-
-![accessing-eks-ingress-kubeflow-browser](/images/accessing-eks-ingress-kubeflow-browser.png)
-
 Accessing the Kubeflow dashboard.
 
 ![kubeflow-screenshot-1](/images/kubeflow-screenshot-1.png)
