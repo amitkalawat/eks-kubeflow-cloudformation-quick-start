@@ -54,3 +54,15 @@ export NODE_IAM_ROLE_NAME=$(eksctl get iamidentitymapping --cluster ${AWS_CLUSTE
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
+
+
+cd kfext && chmod +x v1.0.2.tar.gz 
+tar -xvf v1.0.2.tar.gz
+cd manifests-1.0.2/ && kubectl apply -k aws/istio-ingress/base --namespace istio-system
+kubectl get ingress -n istio-system
+
+sleep 600
+aws ssm delete-parameter --name "ISTIO_URL"
+export ISTIO_URL=$(kubectl get ingress -n istio-system | awk  '{print $4}' | grep -i istio)
+aws ssm put-parameter --name "ISTIO_URL" --value "${ISTIO_URL}" --type String
+
