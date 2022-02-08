@@ -52,15 +52,13 @@ eksctl utils write-kubeconfig --cluster ${AWS_CLUSTER_NAME}
 cd ${KF_DIR} && kfctl apply -V -f ${CONFIG_FILE}
 kubectl -n kubeflow get all
 
-
 export NODE_IAM_ROLE_NAME=$(eksctl get iamidentitymapping --cluster ${AWS_CLUSTER_NAME} | grep  arn | awk  '{print $1}' | egrep -o eks.*)
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
 
-
 sudo tar -xvf /home/ec2-user/eks-kubeflow-cloudformation-quick-start/kfext/v1.0.2.tar.gz
-kubectl apply -k /home/ec2-user/eks-kubeflow-cloudformation-quick-start/manifests-1.0.2/aws/istio-ingress/base --namespace istio-system
+kubectl apply -k ${KF_DIR}/manifests-1.0.2/aws/istio-ingress/base --namespace istio-system
 kubectl get ingress -n istio-system
 sleep 600
 aws ssm delete-parameter --name "ISTIO_URL"
