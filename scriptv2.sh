@@ -40,8 +40,8 @@ cd ${KF_DIR} && wget -O kfctl_aws.yaml $CONFIG_URI
 
 sed -i.bak -e "/region: us-west-2/ a \      enablePodIamPolicy: true" ${CONFIG_FILE}
 sed -i.bak -e "s@us-west-2@$AWS_REGION@" ${CONFIG_FILE}
-sed -i.bak -e "s@roles:@#roles:@" ${CONFIG_FILE}
-sed -i.bak -e "s@- eksctl-kubeflow-aws-nodegroup-ng-a2-NodeInstanceRole-xxxxxxx@#- eksctl-kubeflow-aws-nodegroup-ng-a2-NodeInstanceRole-xxxxxxx@" ${CONFIG_FILE}
+#sed -i.bak -e "s@roles:@#roles:@" ${CONFIG_FILE}
+#sed -i.bak -e "s@- eksctl-kubeflow-aws-nodegroup-ng-a2-NodeInstanceRole-xxxxxxx@#- eksctl-kubeflow-aws-nodegroup-ng-a2-NodeInstanceRole-xxxxxxx@" ${CONFIG_FILE}
 sed -i.bak -e "s@eksctl-kubeflow-aws-nodegroup-ng-a2-NodeInstanceRole-xxxxxxx@$ROLE_NAME@" ${CONFIG_FILE}
 sed -i.bak -e 's/kubeflow-aws/'"$AWS_CLUSTER_NAME"'/' ${CONFIG_FILE}
 
