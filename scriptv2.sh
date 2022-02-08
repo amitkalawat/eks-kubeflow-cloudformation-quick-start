@@ -16,11 +16,8 @@ export NODEGROUP_NAME=$(eksctl get nodegroups --cluster ${AWS_CLUSTER_NAME} -o j
 eksctl scale nodegroup --cluster ${AWS_CLUSTER_NAME} --name $NODEGROUP_NAME --nodes 6 --nodes-max 10
 
 # Install KFCTL
-sudo curl --silent --location -o /usr/local/bin/kfctl https://github.com/kalawat1985/eks-kubeflow-cloudformation-quick-start/blob/a8376c2d89b690a9d3f30e14ca0aa8652073e18e/kfext/kfctl
-sudo chmod +x /usr/local/bin/kfctl
 
-# Install kfext and binaries
-curl --silent --location "https://github.com/kalawat1985/eks-kubeflow-cloudformation-quick-start/blob/a8376c2d89b690a9d3f30e14ca0aa8652073e18e/kfext/v1.0.2.tar.gz" | tar -xvf -C /tmp
+sudo cp -v /home/ec2-user/eks-kubeflow-cloudformation-quick-start/kfext/kfctl /usr/local/bin
 
 
 cat << EoF > kf-install.sh
@@ -62,7 +59,9 @@ aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aw
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
 
 
-kubectl apply -k /tmp/manifests-1.0.2/aws/istio-ingress/base --namespace istio-system
+sudo tar -xvf /home/ec2-user/eks-kubeflow-cloudformation-quick-start/kfext/v1.0.2.tar.gz -R /home/ec2-user/eks-kubeflow-cloudformation-quick-start
+
+kubectl apply -k /home/ec2-user/eks-kubeflow-cloudformation-quick-start/manifests-1.0.2/aws/istio-ingress/base --namespace istio-system
 kubectl get ingress -n istio-system
 sleep 600
 aws ssm delete-parameter --name "ISTIO_URL"
