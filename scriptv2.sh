@@ -59,8 +59,7 @@ aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aw
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
 
 
-sudo tar -xvf /home/ec2-user/eks-kubeflow-cloudformation-quick-start/kfext/v1.0.2.tar.gz -R /home/ec2-user/eks-kubeflow-cloudformation-quick-start
-
+sudo tar -xvf /home/ec2-user/eks-kubeflow-cloudformation-quick-start/kfext/v1.0.2.tar.gz
 kubectl apply -k /home/ec2-user/eks-kubeflow-cloudformation-quick-start/manifests-1.0.2/aws/istio-ingress/base --namespace istio-system
 kubectl get ingress -n istio-system
 sleep 600
