@@ -15,11 +15,13 @@ echo "export ROLE_NAME=${ROLE_NAME}" | tee -a ~/.bash_profile
 export NODEGROUP_NAME=$(eksctl get nodegroups --cluster ${AWS_CLUSTER_NAME} -o json | jq -r '.[0].Name')
 eksctl scale nodegroup --cluster ${AWS_CLUSTER_NAME} --name $NODEGROUP_NAME --nodes 6 --nodes-max 10
 
+# Install KFCTL
+sudo curl --silent --location -o /usr/local/bin/kfctl https://github.com/kalawat1985/eks-kubeflow-cloudformation-quick-start/blob/a8376c2d89b690a9d3f30e14ca0aa8652073e18e/kfext/kfctl
+sudo chmod +x /usr/local/bin/kfctl
 
-chmod -R 777 kfext 
-tar -xvf kfext/v1.0.2.tar.gz
+# Install kfext and binaries
+curl --silent --location "https://github.com/kalawat1985/eks-kubeflow-cloudformation-quick-start/blob/a8376c2d89b690a9d3f30e14ca0aa8652073e18e/kfext/v1.0.2.tar.gz" | tar -xvf -C /tmp
 
-sudo cp -v kfext/kfctl /usr/local/bin
 
 cat << EoF > kf-install.sh
 export AWS_CLUSTER_NAME=\${AWS_CLUSTER_NAME}
@@ -60,11 +62,9 @@ aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aw
 aws iam attach-role-policy --role-name ${NODE_IAM_ROLE_NAME} --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
 
 
-kubectl apply -k ${BASE_DIR}/eks-kubeflow-cloudformation-quick-start/manifests-1.0.2/aws/istio-ingress/base --namespace istio-system
+kubectl apply -k /tmp/manifests-1.0.2/aws/istio-ingress/base --namespace istio-system
 kubectl get ingress -n istio-system
 sleep 600
 aws ssm delete-parameter --name "ISTIO_URL"
 export ISTIO_URL=$(kubectl get ingress -n istio-system | awk  '{print $4}' | grep -i istio)
 aws ssm put-parameter --name "ISTIO_URL" --value "${ISTIO_URL}" --type String
-
-
